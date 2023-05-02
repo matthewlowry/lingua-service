@@ -1,0 +1,33 @@
+
+# Configuration properties for the Lingua wrapper
+lingua-server:
+  # Pre-load all language models?
+  # Shifts model loading overhead to startup time; may result in higher heap requirements but avoids hitting early
+  # requests with that overhead. Generally you want true for the use case of having this server running in containers
+  # in an autoscaling group behing a load balancer.
+  preload-models: true
+  # Make the output pretty?
+  # This is for the benefit of humans looking at the output; machines don't care one way or 'tother. The price is
+  # slightly larger responses as they have added whitespace.
+  pretty-print: true
+
+# Configure the Spring Boot management endpoints
+# This is activating a bunch of stuff that you get out-of-the-box with Spring Boot.
+# It's mainly for debugging and development purposes but is harmless to leave activated.
+# In a cluster-behind-a-loadbalancer context the '/management/shutdown' may also be useful.
+management:
+  # Expose all the built-in endpoints, with '/management' as the base path.
+  endpoints:
+    web:
+      base-path: "/management"
+      exposure:
+        include: "*"
+  # Configure individual endpoints
+  endpoint:
+    # By default health endpoint doesn't show details; configure to show details always.
+    health:
+      show-details: always
+      show-components: always
+    # By default shutdown endpoint is not enabled; enable it.
+    shutdown:
+      enabled: true
